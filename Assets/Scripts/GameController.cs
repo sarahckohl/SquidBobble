@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-    private HexGrid _currentBoard = new HexGrid();
+    private HexGrid _currentBoard = null;
     public  HexGrid currentBoard
     {
         get {
             return _currentBoard;
         }
+
     }
 
 
@@ -23,6 +24,7 @@ public class GameController : MonoBehaviour {
 	void Start () {
 
         //this will be adapted into level selecting logic
+        _currentBoard = (HexGrid)ScriptableObject.CreateInstance("HexGrid");
         
 
     }

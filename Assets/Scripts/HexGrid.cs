@@ -53,7 +53,7 @@ public class GridTile
 
 }
 
-public class HexGrid {
+public class HexGrid : ScriptableObject {
 
 
 
@@ -103,14 +103,22 @@ public class HexGrid {
 
         hexArray = new GridTile[HexGrid.StageHeight + 1][];
 
-        for (int i = 1; i <= hexArray.Length; i++)
+        for (int i = 1; i < hexArray.Length; i++)
         {
             //logic for even/odd rows. keep handy
-            for (int j = 1; j < ((i % 2 == 0) ? HexGrid.StageWidth + 1 : HexGrid.StageWidth); j++)
+                int ok = ((i % 2 == 0) ? HexGrid.StageWidth + 1 : HexGrid.StageWidth);
+                
+                hexArray[i] = new GridTile[ok];
+
+            for (int j = 1; j < ok; j++)
             {
-                hexArray[i] = new GridTile[j];
+                Debug.Log("Creating bubble " + j + " of " + ok + "in row " + i);
+                hexArray[i][j] = new GridTile(i,j,GridTile.BubbleColor.Empty);
             }
+
         }
+
+        Debug.Log("COMPLETE");
     }
 
 
