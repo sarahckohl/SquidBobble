@@ -106,13 +106,12 @@ public class HexGrid : ScriptableObject {
         for (int i = 1; i < hexArray.Length; i++)
         {
             //logic for even/odd rows. keep handy
-                int ok = ((i % 2 == 0) ? HexGrid.StageWidth + 1 : HexGrid.StageWidth);
-                
-                hexArray[i] = new GridTile[ok];
+                int rowlength = ((i % 2 == 0) ? HexGrid.StageWidth + 1 : HexGrid.StageWidth); 
+                hexArray[i] = new GridTile[rowlength];
 
-            for (int j = 1; j < ok; j++)
+            for (int j = 1; j < rowlength; j++)
             {
-                Debug.Log("Creating bubble " + j + " of " + ok + "in row " + i);
+                Debug.Log("Creating bubble " + j + " of " + rowlength + "in row " + i);
                 hexArray[i][j] = new GridTile(i,j,GridTile.BubbleColor.Empty);
             }
 
