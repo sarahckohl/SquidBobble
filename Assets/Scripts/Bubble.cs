@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Bubble : MonoBehaviour {
 
+
+    public enum BubbleColor { Red, Orange, Yellow, Green, Blue, Violet, Black, White };
+    public BubbleColor color {
+        get;
+        private set;
+    }
+    
+
     bool isSnapped = false;
     static float bubbleSpeed = 15f;
     //once bubble prefab exists, can use code below
@@ -63,21 +71,22 @@ public class Bubble : MonoBehaviour {
     //instead of destroying this, let's just pool it
     private void deActivate() {
         //maybe grid snapping function should best be defined here, access grid parameters through public variables
-
         Vector2 snapped = calculateSnapCoordinates();
 
         gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         gameObject.GetComponent<Rigidbody2D>().transform.position = snapped;
         gameObject.transform.position = snapped;
-
+        isSnapped = true;
+        snapToGrid();
+        Debug.Log(GameController.currentBoard);
     }
 
 
     private void snapToGrid() {
-        deActivate();
+      
     }
 
-    public static Bubble Create(Transform transform) {
+    public static Bubble Create(Transform transform, BubbleColor newcolor) {
      
         GameObject bubbleInstance = Instantiate(prefab, transform.position, Quaternion.identity) as GameObject;
         Bubble newBubble = bubbleInstance.GetComponent<Bubble>();
@@ -90,13 +99,15 @@ public class Bubble : MonoBehaviour {
 
 
         newBubble.GetComponent<Rigidbody2D>().velocity = transform.right*bubbleSpeed;
-        //newBubble.snapped = false;
+        newBubble.color = newcolor;
 
         return newBubble;
     }
 
     // Use this for initialization
     void Start (){
+
+
     }
 
     void Awake() {
@@ -140,7 +151,6 @@ public class Bubble : MonoBehaviour {
         //this will be substituted with collision and likely moved to FixedUpdate
         if (gameObject.transform.position.y > 8 - HexGrid.tileRadius && !isSnapped)
         {
-            isSnapped = true;
             deActivate();
         }
 
@@ -148,8 +158,6 @@ public class Bubble : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.S))
             {
             deActivate();
-            //this.snapped = true;
-
         }
 		
 	}

@@ -8,9 +8,12 @@ public class GridTile
 
     private readonly int _column;
     private readonly int _row;
-    private readonly BubbleColor _color;
+    public Bubble bubble {
+        get;
+        private set;
+    }
 
-    public enum BubbleColor { Red, Orange, Yellow, Green, Blue, Violet, Black, White, Empty };
+
 
 
 
@@ -30,23 +33,59 @@ public class GridTile
         }
     }
 
-    public BubbleColor color
-    {
-        get {
-            return _color;
-        }
-    }
-
-    public GridTile(int xcord, int ycord, BubbleColor color)
+    public GridTile(int xcord, int ycord, Bubble myBubble=null)
     {
         _column = xcord;
         _row = ycord;
-        _color = color;
-
+        bubble = myBubble;
     }
 
     public override string ToString() {
-        return "("+_color.ToString()+")";
+
+        StringBuilder sb = new StringBuilder(3);
+        sb.Append("(");
+
+        if (bubble != null)
+        {
+
+            switch (bubble.color)
+            {
+                case Bubble.BubbleColor.Red:
+                    sb.Append("R");
+                    break;
+                case Bubble.BubbleColor.Orange:
+                    sb.Append("O");
+                    break;
+                case Bubble.BubbleColor.Yellow:
+                    sb.Append("Y");
+                    break;
+                case Bubble.BubbleColor.Green:
+                    sb.Append("G");
+                    break;
+                case Bubble.BubbleColor.Blue:
+                    sb.Append("U");
+                    break;
+                case Bubble.BubbleColor.Violet:
+                    sb.Append("V");
+                    break;
+                case Bubble.BubbleColor.Black:
+                    sb.Append("B");
+                    break;
+                case Bubble.BubbleColor.White:
+                    sb.Append("W");
+                    break;
+                default:
+                    sb.Append(" ");
+                    break;
+            }
+        }
+        else
+        { 
+            sb.Append(" ");
+        }
+        sb.Append(")");
+
+        return sb.ToString();
 
     }
 
@@ -112,7 +151,7 @@ public class HexGrid : ScriptableObject {
             for (int j = 1; j < rowlength; j++)
             {
                 Debug.Log("Creating bubble " + j + " of " + rowlength + "in row " + i);
-                hexArray[i][j] = new GridTile(i,j,GridTile.BubbleColor.Empty);
+                hexArray[i][j] = new GridTile(i,j);
             }
 
         }
@@ -123,11 +162,11 @@ public class HexGrid : ScriptableObject {
 
     public override string ToString() {
 
-        Debug.Log("Printing Hexgrid of size "+hexArray.Length);
+        Debug.Log("Printing HEXGRID OF SIZE "+hexArray.Length);
 
         StringBuilder sb = new StringBuilder(100);
 
-        for (int i = 1; i <= hexArray.Length; i++)
+        for (int i = 1; i <= HexGrid.StageHeight; i++)
         {
             if (i % 2 != 0)
             {
@@ -162,6 +201,31 @@ public class HexGrid : ScriptableObject {
 
     }
 
+    public void snapBubble(GameObject bubble)
+    {
+        Bubble bubbleObject = bubble.GetComponent<Bubble>();
+        Vector2 bubblePosition = bubble.transform.position;
+
+        int xdest;
+        int ydest;
+
+        arrayPositionFromCoordinates(bubblePosition, out xdest, out ydest);
+
+        hexArray[xdest][ydest] = new GridTile(xdest,ydest,bubbleObject);
+
+    }
+
+
+    static void arrayPositionFromCoordinates(Vector2 position, out int column, out int row)
+    {
+        int xoffset = 4;
+        int yoffset = 10;  //yoffset - coordinate will give grid position
+
+        column = (int)Mathf.Floor(position.x) + xoffset;
+        row = yoffset - (int)Mathf.Floor(position.y);
+
+    }
+
 
     //finds closest HexGrid tile
     public static void getGridCoordinates(Vector2 position, out float xCord, out float yCord)
@@ -184,6 +248,5 @@ public class HexGrid : ScriptableObject {
         xCord = Mathf.Floor(position.x/tileDiameter)+offset;
 
     }
-
    
 }

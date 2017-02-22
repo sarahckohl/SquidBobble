@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-    private HexGrid _currentBoard = null;
-    public  HexGrid currentBoard
+    private static HexGrid _currentBoard = null;
+    public  static HexGrid currentBoard
     {
         get {
             return _currentBoard;

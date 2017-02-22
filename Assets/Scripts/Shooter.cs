@@ -21,7 +21,7 @@ public class Shooter : MonoBehaviour {
 
         if (Input.GetButtonDown("Shoot"))
         {
-            Bubble.Create(gameObject.transform);
+            Bubble.Create(gameObject.transform, Bubble.BubbleColor.Red);
         }
 		
 	}
